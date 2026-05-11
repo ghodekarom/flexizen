@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/security
+           http://www.springframework.org/schema/security/spring-security.xsd">
+
+    <!-- ================================== -->
+    <!-- BCrypt Password Encoder Bean       -->
+    <!-- ================================== -->
+    <bean id="passwordEncoder"
+          class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
+
+    <!-- ================================== -->
+    <!-- HTTP Security Configuration        -->
+    <!-- Session-based authentication       -->
+    <!-- ================================== -->
+    <security:http auto-config="false" use-expressions="true"
+                   entry-point-ref="restAuthenticationEntryPoint">
+
+        <!-- CSRF disabled for REST API -->
+        <security:csrf disabled="true" />
+
+        <!-- Public endpoints — user-facing -->
+        <security:intercept-url pattern="/api/auth/**" access="permitAll" />
+        <security:intercept-url pattern="/api/classes" method="GET" access="permitAll" />
+        <security:intercept-url pattern="/api/classes/*" method="GET" access="permitAll" />
+        <security:intercept-url pattern="/api/bookings" method="POST" access="permitAll" />
+        <security:intercept-url pattern="/api/enquiries" method="POST" access="permitAll" />
+        <security:intercept-url pattern="/api/pages/**" method="GET" access="permitAll" />
+        <security:intercept-url pattern="/api/health" access="permitAll" />
+
+        <!-- Admin-only endpoints -->
+        <security:intercept-url pattern="/api/admin/**" access="hasRole('ADMIN')" />
+        <security:intercept-url pattern="/api/classes" method="POST" access="hasRole('ADMIN')" />
+        <security:intercept-url pattern="/api/classes/*" method="PUT" access="hasRole('ADMIN')" />
+        <security:intercept-url pattern="/api/classes/*" method="DELETE" access="hasRole('ADMIN')" />
+        <security:intercept-url pattern="/api/bookings" method="GET" access="hasRole('ADMIN')" />
+        <security:intercept-url pattern="/api/bookings/**" method="PUT" access="hasRole('ADMIN')" />
+        <security:intercept-url pattern="/api/bookings/**" method="GET" access="hasRole('ADMIN')" />
+        <security:intercept-url pattern="/api/enquiries" method="GET" access="hasRole('ADMIN')" />
+        <security:intercept-url pattern="/api/enquiries/**" method="PUT" access="hasRole('ADMIN')" />
+        <security:intercept-url pattern="/api/enquiries/**" method="DELETE" access="hasRole('ADMIN')" />
+        <security:intercept-url pattern="/api/reports/**" access="hasRole('ADMIN')" />
+        <security:intercept-url pattern="/api/pages/**" method="PUT" access="hasRole('ADMIN')" />
+
+        <!-- Session management -->
+        <security:session-management>
+            <security:concurrency-control max-sessions="1" error-if-maximum-exceeded="false" />
+        </security:session-management>
+
+        <!-- Logout configuration -->
+        <security:logout logout-url="/api/auth/logout"
+                         invalidate-session="true"
+                         delete-cookies="JSESSIONID" />
+
+    </security:http>
+
+    <!-- ================================== -->
+    <!-- Custom Entry Point                 -->
+    <!-- Returns 401 JSON instead of        -->
+    <!-- redirecting to a login page         -->
+    <!-- ================================== -->
+    <bean id="restAuthenticationEntryPoint"
+          class="org.springframework.security.web.authentication.HttpStatusEntryPoint">
+        <constructor-arg value="UNAUTHORIZED" />
+    </bean>
+
+    <!-- ================================== -->
+    <!-- Authentication Manager             -->
+    <!-- Will be wired to custom            -->
+    <!-- AuthService in Phase 3             -->
+    <!-- ================================== -->
+    <security:authentication-manager alias="authenticationManager">
+        <!-- Placeholder: in-memory admin for Phase 1 testing -->
+        <security:authentication-provider>
+            <security:password-encoder ref="passwordEncoder" />
+            <security:user-service>
+                <security:user name="admin"
+                               password="$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy"
+                               authorities="ROLE_ADMIN" />
+            </security:user-service>
+        </security:authentication-provider>
+    </security:authentication-manager>
+
+</beans>

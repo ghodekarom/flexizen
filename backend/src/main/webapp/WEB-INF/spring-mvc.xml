@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context.xsd
+           http://www.springframework.org/schema/mvc
+           http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+    <!-- ================================== -->
+    <!-- Component Scanning                 -->
+    <!-- Controllers & Exception Handlers   -->
+    <!-- ================================== -->
+    <context:component-scan base-package="com.flexizen.controller" />
+    <context:component-scan base-package="com.flexizen.exception" />
+
+    <!-- ================================== -->
+    <!-- Annotation-Driven MVC              -->
+    <!-- Jackson message converters         -->
+    <!-- ================================== -->
+    <mvc:annotation-driven>
+        <mvc:message-converters>
+            <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+                <property name="objectMapper">
+                    <bean class="com.fasterxml.jackson.databind.ObjectMapper">
+                        <property name="serializationInclusion">
+                            <value type="com.fasterxml.jackson.annotation.JsonInclude.Include">NON_NULL</value>
+                        </property>
+                        <!-- Register JavaTimeModule for LocalDate, LocalDateTime, etc. -->
+                        <property name="registeredModules">
+                            <list>
+                                <bean class="com.fasterxml.jackson.datatype.jsr310.JavaTimeModule" />
+                            </list>
+                        </property>
+                    </bean>
+                </property>
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+
+    <!-- ================================== -->
+    <!-- CORS Configuration                 -->
+    <!-- Allow React dev server origin      -->
+    <!-- ================================== -->
+    <mvc:cors>
+        <mvc:mapping path="/api/**"
+                     allowed-origins="http://localhost:5173"
+                     allowed-methods="GET, POST, PUT, DELETE, OPTIONS"
+                     allowed-headers="Content-Type, Authorization, X-Requested-With"
+                     allow-credentials="true"
+                     max-age="3600" />
+    </mvc:cors>
+
+</beans>
