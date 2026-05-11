@@ -4,6 +4,8 @@ import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import Login from './pages/admin/Login';
 import Dashboard from './pages/admin/Dashboard';
+import ManageClasses from './pages/admin/ManageClasses';
+import Profile from './pages/admin/Profile';
 
 function App() {
   return (
@@ -17,6 +19,16 @@ function App() {
           <Route path="/admin/dashboard" element={
             <ProtectedRoute>
               <Dashboard />
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/classes" element={
+            <ProtectedRoute>
+              <ManageClasses />
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/profile" element={
+            <ProtectedRoute>
+              <Profile />
             </ProtectedRoute>
           } />
 
