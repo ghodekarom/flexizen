@@ -6,16 +6,28 @@ import Login from './pages/admin/Login';
 import Dashboard from './pages/admin/Dashboard';
 import ManageClasses from './pages/admin/ManageClasses';
 import Profile from './pages/admin/Profile';
+import Home from './pages/Home';
+import Classes from './pages/Classes';
+import About from './pages/About';
+import Contact from './pages/Contact';
+import BookingForm from './pages/BookingForm';
 
 function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
         <Routes>
-          {/* Public Route */}
+          {/* Public Routes */}
+          <Route path="/" element={<Home />} />
+          <Route path="/classes" element={<Classes />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/book/:id" element={<BookingForm />} />
+
+          {/* Admin Login */}
           <Route path="/admin/login" element={<Login />} />
           
-          {/* Protected Routes */}
+          {/* Protected Admin Routes */}
           <Route path="/admin/dashboard" element={
             <ProtectedRoute>
               <Dashboard />
@@ -32,8 +44,8 @@ function App() {
             </ProtectedRoute>
           } />
 
-          {/* Redirect root to login for now */}
-          <Route path="*" element={<Navigate to="/admin/login" replace />} />
+          {/* Fallback */}
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

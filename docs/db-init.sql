@@ -3,10 +3,11 @@
 -- Run this in PostgreSQL before first startup.
 -- =============================================
 
--- Step 1: Create the database (run as superuser)
+-- Step 1: Create the database
 CREATE DATABASE flexizen;
 
--- Step 2: Connect to the database: \c flexizen
+-- Step 2: Connect to the database
+\c flexizen;
 
 -- =============================================
 -- NOTE: Hibernate will auto-create all tables
