@@ -71,18 +71,12 @@
 
     <!-- ================================== -->
     <!-- Authentication Manager             -->
-    <!-- Will be wired to custom            -->
-    <!-- AuthService in Phase 3             -->
+    <!-- Wired to database via              -->
+    <!-- CustomUserDetailsService           -->
     <!-- ================================== -->
     <security:authentication-manager alias="authenticationManager">
-        <!-- Placeholder: in-memory admin for Phase 1 testing -->
-        <security:authentication-provider>
+        <security:authentication-provider user-service-ref="customUserDetailsService">
             <security:password-encoder ref="passwordEncoder" />
-            <security:user-service>
-                <security:user name="admin"
-                               password="$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy"
-                               authorities="ROLE_ADMIN" />
-            </security:user-service>
         </security:authentication-provider>
     </security:authentication-manager>
 
