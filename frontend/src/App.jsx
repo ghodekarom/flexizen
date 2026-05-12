@@ -9,6 +9,7 @@ import Profile from './pages/admin/Profile';
 import ManageBookings from './pages/admin/ManageBookings';
 import ManageEnquiries from './pages/admin/ManageEnquiries';
 import SearchBooking from './pages/admin/SearchBooking';
+import Reports from './pages/admin/Reports';
 import Home from './pages/Home';
 import Classes from './pages/Classes';
 import About from './pages/About';
@@ -59,6 +60,11 @@ function App() {
           <Route path="/admin/profile" element={
             <ProtectedRoute>
               <Profile />
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/reports" element={
+            <ProtectedRoute>
+              <Reports />
             </ProtectedRoute>
           } />
 

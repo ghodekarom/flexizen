@@ -12,4 +12,5 @@ public interface BookingDao {
     List<Booking> findByStatus(BookingStatus status);
     Booking update(Booking booking);
     long countByClassId(Long classId);
+    List<Booking> findByDateRange(java.time.LocalDate startDate, java.time.LocalDate endDate);
 }

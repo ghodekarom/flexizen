@@ -61,4 +61,13 @@ public class BookingDaoImpl implements BookingDao {
                 .setParameter("classId", classId)
                 .getSingleResult();
     }
+    @Override
+    public List<Booking> findByDateRange(java.time.LocalDate startDate, java.time.LocalDate endDate) {
+        return entityManager.createQuery(
+                "SELECT b FROM Booking b WHERE CAST(b.createdAt AS date) BETWEEN :startDate AND :endDate ORDER BY b.createdAt DESC", 
+                Booking.class)
+                .setParameter("startDate", startDate)
+                .setParameter("endDate", endDate)
+                .getResultList();
+    }
 }

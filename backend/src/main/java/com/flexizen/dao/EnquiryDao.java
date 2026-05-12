@@ -9,4 +9,5 @@ public interface EnquiryDao {
     List<Enquiry> findAll();
     Enquiry update(Enquiry enquiry);
     void delete(Long id);
+    List<Enquiry> findByDateRange(java.time.LocalDate startDate, java.time.LocalDate endDate);
 }

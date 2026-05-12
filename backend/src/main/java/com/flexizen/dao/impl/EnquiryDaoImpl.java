@@ -42,4 +42,13 @@ public class EnquiryDaoImpl implements EnquiryDao {
             entityManager.remove(enquiry);
         }
     }
+    @Override
+    public List<Enquiry> findByDateRange(java.time.LocalDate startDate, java.time.LocalDate endDate) {
+        return entityManager.createQuery(
+                "SELECT e FROM Enquiry e WHERE CAST(e.createdAt AS date) BETWEEN :startDate AND :endDate ORDER BY e.createdAt DESC", 
+                Enquiry.class)
+                .setParameter("startDate", startDate)
+                .setParameter("endDate", endDate)
+                .getResultList();
+    }
 }
