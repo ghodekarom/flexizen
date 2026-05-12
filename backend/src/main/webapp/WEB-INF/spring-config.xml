@@ -27,7 +27,7 @@
         <property name="driverClassName" value="org.postgresql.Driver" />
         <property name="jdbcUrl" value="jdbc:postgresql://localhost:5432/flexizen" />
         <property name="username" value="postgres" />
-        <property name="password" value="postgres" />
+        <property name="password" value="password" />
         <property name="maximumPoolSize" value="10" />
         <property name="minimumIdle" value="2" />
         <property name="connectionTimeout" value="30000" />
@@ -42,6 +42,7 @@
           class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
         <property name="dataSource" ref="dataSource" />
         <property name="packagesToScan" value="com.flexizen.model" />
+        <property name="entityManagerFactoryInterface" value="jakarta.persistence.EntityManagerFactory" />
         <property name="jpaVendorAdapter">
             <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
                 <property name="database" value="POSTGRESQL" />
@@ -55,6 +56,7 @@
                 <prop key="hibernate.hbm2ddl.auto">update</prop>
                 <prop key="hibernate.format_sql">true</prop>
                 <prop key="hibernate.jdbc.time_zone">UTC</prop>
+                <prop key="hibernate.transaction.jta.platform">org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform</prop>
             </props>
         </property>
     </bean>
@@ -69,5 +71,8 @@
 
     <!-- Enable @Transactional annotation support -->
     <tx:annotation-driven transaction-manager="transactionManager" />
+
+    <!-- Required for Spring Security 6 MvcRequestMatcher in Root Context -->
+    <bean name="mvcHandlerMappingIntrospector" class="org.springframework.web.servlet.handler.HandlerMappingIntrospector" />
 
 </beans>

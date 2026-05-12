@@ -17,6 +17,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -39,13 +41,9 @@ public class AuthController {
     @Autowired
     private AuthService authService;
 
-    /**
-     * POST /api/auth/login
-     *
-     * Expects JSON: { "username": "...", "password": "..." }
-     * On success: creates a server-side session and returns admin info.
-     * On failure: returns 401 with error message.
-     */
+    @Autowired
+    private org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
+
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<Map<String, Object>>> login(
             @RequestBody Map<String, String> credentials,
@@ -61,34 +59,41 @@ public class AuthController {
         }
 
         try {
-            // Authenticate via Spring Security
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(username, password)
-            );
+            logger.info(">>> LOGIN ATTEMPT: username=[{}], password=[{}]", username, password);
+            Admin admin = authService.validateCredentials(username, password);
+            
+            if (admin != null) {
+                logger.info(">>> LOGIN SUCCESS: Manually creating session for admin.");
+                
+                // Create a manual authentication token
+                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
+                        admin.getUsername(), null, 
+                        Collections.singletonList(new SimpleGrantedAuthority("ROLE_ADMIN")));
+                
+                SecurityContextHolder.getContext().setAuthentication(auth);
+                
+                // Create session manually
+                HttpSession session = request.getSession(true);
+                session.setAttribute("SPRING_SECURITY_CONTEXT", SecurityContextHolder.getContext());
 
-            // Store authentication in SecurityContext (session-based)
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+                Map<String, Object> adminData = new LinkedHashMap<>();
+                adminData.put("username", admin.getUsername());
+                adminData.put("name", admin.getName());
+                adminData.put("email", admin.getEmail());
 
-            // Create session
-            HttpSession session = request.getSession(true);
-            session.setAttribute("SPRING_SECURITY_CONTEXT", SecurityContextHolder.getContext());
+                return ResponseEntity.ok(ApiResponse.success("Login successful", adminData));
+            }
 
-            // Get admin details for response
-            Admin admin = authService.getCurrentAdmin();
-            Map<String, Object> adminData = new LinkedHashMap<>();
-            adminData.put("username", admin.getUsername());
-            adminData.put("name", admin.getName());
-            adminData.put("email", admin.getEmail());
-
-            logger.info("Admin logged in: {}", username);
-
-            return ResponseEntity.ok(ApiResponse.success("Login successful", adminData));
-
-        } catch (BadCredentialsException e) {
-            logger.warn("Login failed for: {}", username);
+            logger.error(">>> LOGIN FAILED: Manual validation failed.");
             return ResponseEntity
                     .status(HttpStatus.UNAUTHORIZED)
                     .body(ApiResponse.error("Invalid username or password"));
+
+        } catch (Exception e) {
+            logger.error(">>> LOGIN ERROR: Exception during authentication", e);
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(ApiResponse.error("An internal error occurred during login"));
         }
     }
 

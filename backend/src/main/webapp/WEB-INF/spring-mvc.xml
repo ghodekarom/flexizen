@@ -26,12 +26,9 @@
         <mvc:message-converters>
             <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
                 <property name="objectMapper">
-                    <bean class="com.fasterxml.jackson.databind.ObjectMapper">
-                        <property name="serializationInclusion">
-                            <value type="com.fasterxml.jackson.annotation.JsonInclude.Include">NON_NULL</value>
-                        </property>
-                        <!-- Register JavaTimeModule for LocalDate, LocalDateTime, etc. -->
-                        <property name="registeredModules">
+                    <bean class="org.springframework.http.converter.json.Jackson2ObjectMapperFactoryBean">
+                        <property name="serializationInclusion" value="NON_NULL" />
+                        <property name="modules">
                             <list>
                                 <bean class="com.fasterxml.jackson.datatype.jsr310.JavaTimeModule" />
                             </list>
@@ -48,11 +45,12 @@
     <!-- ================================== -->
     <mvc:cors>
         <mvc:mapping path="/api/**"
-                     allowed-origins="http://localhost:5173"
+                     allowed-origins="http://localhost:5173, http://localhost:5174, http://localhost:5175, http://localhost:5176, http://localhost:5177, http://localhost:5178"
                      allowed-methods="GET, POST, PUT, DELETE, OPTIONS"
                      allowed-headers="Content-Type, Authorization, X-Requested-With"
                      allow-credentials="true"
                      max-age="3600" />
     </mvc:cors>
+
 
 </beans>

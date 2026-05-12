@@ -4,7 +4,7 @@ import axios from 'axios';
 // This ensures that the JSESSIONID cookie is sent with every request,
 // which is required for Spring Security session-based auth.
 const axiosInstance = axios.create({
-    baseURL: 'http://localhost:8080/api', // Tomcat default port
+    baseURL: 'http://localhost:8080/backend/api', // Updated to match Tomcat context path
     withCredentials: true,
     headers: {
         'Content-Type': 'application/json',

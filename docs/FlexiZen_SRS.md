@@ -541,8 +541,8 @@ flexizen/
 - Configure `web.xml` (DispatcherServlet, session timeout)
 - Configure `spring-config.xml` (DataSource, EntityManagerFactory, TransactionManager)
 - Configure `spring-mvc.xml` (CORS, Jackson, annotation-driven)
-- Configure `spring-security.xml` (login URL, protected routes, BCrypt bean)
-- Set up PostgreSQL database
+- Configure `spring-security.xml` (login URL, protected routes, BCrypt bean
+?=- Set up PostgreSQL database
 - Set up React + Vite + Tailwind
 - Configure `axiosInstance.js` with `withCredentials: true`
 

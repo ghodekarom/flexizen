@@ -45,6 +45,10 @@ public class ApiResponse<T> {
         return new ApiResponse<>("error", message);
     }
 
+    public static <T> ApiResponse<T> error(String message, T data) {
+        return new ApiResponse<>("error", message, data);
+    }
+
     // ---- Getters & Setters ----
 
     public String getStatus() {

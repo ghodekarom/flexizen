@@ -26,26 +26,11 @@
 
         <!-- Public endpoints — user-facing -->
         <security:intercept-url pattern="/api/auth/**" access="permitAll" />
-        <security:intercept-url pattern="/api/classes" method="GET" access="permitAll" />
-        <security:intercept-url pattern="/api/classes/*" method="GET" access="permitAll" />
-        <security:intercept-url pattern="/api/bookings" method="POST" access="permitAll" />
-        <security:intercept-url pattern="/api/enquiries" method="POST" access="permitAll" />
-        <security:intercept-url pattern="/api/pages/**" method="GET" access="permitAll" />
+        <security:intercept-url pattern="/api/public/**" access="permitAll" />
         <security:intercept-url pattern="/api/health" access="permitAll" />
 
         <!-- Admin-only endpoints -->
         <security:intercept-url pattern="/api/admin/**" access="hasRole('ADMIN')" />
-        <security:intercept-url pattern="/api/classes" method="POST" access="hasRole('ADMIN')" />
-        <security:intercept-url pattern="/api/classes/*" method="PUT" access="hasRole('ADMIN')" />
-        <security:intercept-url pattern="/api/classes/*" method="DELETE" access="hasRole('ADMIN')" />
-        <security:intercept-url pattern="/api/bookings" method="GET" access="hasRole('ADMIN')" />
-        <security:intercept-url pattern="/api/bookings/**" method="PUT" access="hasRole('ADMIN')" />
-        <security:intercept-url pattern="/api/bookings/**" method="GET" access="hasRole('ADMIN')" />
-        <security:intercept-url pattern="/api/enquiries" method="GET" access="hasRole('ADMIN')" />
-        <security:intercept-url pattern="/api/enquiries/**" method="PUT" access="hasRole('ADMIN')" />
-        <security:intercept-url pattern="/api/enquiries/**" method="DELETE" access="hasRole('ADMIN')" />
-        <security:intercept-url pattern="/api/reports/**" access="hasRole('ADMIN')" />
-        <security:intercept-url pattern="/api/pages/**" method="PUT" access="hasRole('ADMIN')" />
 
         <!-- Session management -->
         <security:session-management>

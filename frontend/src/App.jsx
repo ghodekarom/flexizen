@@ -6,6 +6,9 @@ import Login from './pages/admin/Login';
 import Dashboard from './pages/admin/Dashboard';
 import ManageClasses from './pages/admin/ManageClasses';
 import Profile from './pages/admin/Profile';
+import ManageBookings from './pages/admin/ManageBookings';
+import ManageEnquiries from './pages/admin/ManageEnquiries';
+import SearchBooking from './pages/admin/SearchBooking';
 import Home from './pages/Home';
 import Classes from './pages/Classes';
 import About from './pages/About';
@@ -36,6 +39,21 @@ function App() {
           <Route path="/admin/classes" element={
             <ProtectedRoute>
               <ManageClasses />
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/bookings" element={
+            <ProtectedRoute>
+              <ManageBookings />
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/enquiries" element={
+            <ProtectedRoute>
+              <ManageEnquiries />
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/search" element={
+            <ProtectedRoute>
+              <SearchBooking />
             </ProtectedRoute>
           } />
           <Route path="/admin/profile" element={

@@ -31,15 +31,19 @@ public class PublicController {
 
     @GetMapping("/pages/{type}")
     public ResponseEntity<ApiResponse<Page>> getPage(@PathVariable String type) {
-        PageType pageType = PageType.valueOf(type.toUpperCase());
-        return ResponseEntity.ok(ApiResponse.success("Page content fetched", publicService.getPageContent(pageType)));
+        try {
+            PageType pageType = PageType.valueOf(type.toUpperCase());
+            return ResponseEntity.ok(ApiResponse.success("Page content fetched", publicService.getPageContent(pageType)));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(ApiResponse.error("Invalid page type: " + type));
+        }
     }
 
     @PostMapping("/bookings")
     public ResponseEntity<ApiResponse<Booking>> createBooking(@RequestBody Booking booking) {
         try {
             return ResponseEntity.ok(ApiResponse.success("Booking submitted successfully", publicService.submitBooking(booking)));
-        } catch (IllegalStateException e) {
+        } catch (IllegalStateException | IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(ApiResponse.error(e.getMessage()));
         }
     }

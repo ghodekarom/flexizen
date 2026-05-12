@@ -38,7 +38,13 @@ public class CustomUserDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException("Admin not found: " + username);
         }
 
-        logger.debug("Loaded admin for authentication: {}", username);
+        String hash = admin.getPassword();
+        if (hash != null && hash.length() >= 60) {
+            logger.info(">>> DB HASH CHECK: Starts with '{}', Ends with '{}', Total Length: {}", 
+                hash.substring(0, 10), hash.substring(hash.length() - 5), hash.length());
+        } else {
+            logger.warn(">>> DB HASH ERROR: Hash is null or too short! Length: {}", (hash != null ? hash.length() : 0));
+        }
 
         return new User(
                 admin.getUsername(),
